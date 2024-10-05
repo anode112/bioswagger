@@ -1,5 +1,9 @@
+import typing
 # проверка правильности сиквенса
-def is_seq(seq):
+def is_valid_seq(seq):
+    """
+    Checking both T and U abundance in sequence.
+    """
     for i in seq:
         if ("t" in i or "T" in i) and ("u" in i or "U" in i):
             return False
@@ -7,6 +11,9 @@ def is_seq(seq):
 
 
 def transcribe(seq):
+    """
+    Make RNA from DNA
+    """
     return complement(seq).replace("t", "u", -1).replace("T", "U", -1)
     # seq.replace('a', 'u').replace('A', 'U').replace('t', 'a').replace('T', 'A').replace('g', 'c').replace('G', 'C').replace('c', 'g').replace('C', 'G')
     # for seq in input_list:
@@ -14,7 +21,11 @@ def transcribe(seq):
     # result.append(seq.('T', 'U').replace('t', 'u').('T', 'U').replace('t', 'u'))
 
 
-def reverse(seq):
+def reverse(seq:str) -> str:
+    """
+    Return reverse sequence
+    """
+    # old version
     # result = []
     # for i in seq:
     #     result.append(i[::-1])
@@ -55,9 +66,12 @@ def complement(seq):
 
 
 def reverse_complement(seq):
+    """
+    Return reverse complement DNA sequence
+    """
     return complement(reverse(seq))
 
-
+# moved to main script
 # def run_dna_rna_tools(input_list):
 #     method = input_list.pop()  # выбираем функцию
 #     if not is_seq(input_list):
