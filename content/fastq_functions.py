@@ -4,7 +4,8 @@ def count_gc(sequence) -> int:
     :param sequence: str
     :return: int
     """
-    return (sequence.count('G') + sequence.count('C')) / len(sequence)
+    return (sequence.count("G") + sequence.count("C")) / len(sequence) * 100
+
 
 def get_seq_quality(quality) -> float:
     """
@@ -12,10 +13,5 @@ def get_seq_quality(quality) -> float:
     :param quality: str
     :return: int
     """
-    quality = quality.split()
-    q_score = [ord(quality) - 33 for letter in quality]
-    return sum(q_score)/len(quality)
-
-# rкак обыграли с 1 верхним порогом?
-# смотреть комменты по коду в гх
-
+    q_score = [ord(letter) - 33 for letter in quality]
+    return sum(q_score) / len(quality)

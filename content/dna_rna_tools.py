@@ -1,4 +1,3 @@
-import typing
 # проверка правильности сиквенса
 def is_valid_seq(seq):
     """
@@ -21,7 +20,7 @@ def transcribe(seq):
     # result.append(seq.('T', 'U').replace('t', 'u').('T', 'U').replace('t', 'u'))
 
 
-def reverse(seq:str) -> str:
+def reverse(seq: str) -> str:
     """
     Return reverse sequence
     """
@@ -70,6 +69,7 @@ def reverse_complement(seq):
     Return reverse complement DNA sequence
     """
     return complement(reverse(seq))
+
 
 # moved to main script
 # def run_dna_rna_tools(input_list):

@@ -2,7 +2,12 @@ from content.dna_rna_tools import reverse, reverse_complement, transcribe, compl
 from content.fastq_functions import count_gc, get_seq_quality
 
 
-def run_dna_rna_tools(*input_list):
+def run_dna_rna_tools(*input_list) -> list:
+    """
+    Takes list of seqs with method as last argument
+    :param input_list: list
+    :return: list
+    """
     # переписать тут, чтобы было как на консе у антона
     *input_list, method = input_list
     # method = input_list.pop()  # выбираем функцию
@@ -11,28 +16,27 @@ def run_dna_rna_tools(*input_list):
         return None
 
     if method == "reverse":
-        res = map(reverse, input_list)
-        return res[0] if len(res) == 1 else list(res)
+        res = list(map(reverse, input_list))
+        return res[0] if len(res) == 1 else res
     if method == "transcribe":
-        res = map(transcribe, input_list)
-        return res[0] if len(res) == 1 else list(res)
+        res = list(map(transcribe, input_list))
+        return res[0] if len(res) == 1 else res
     if method == "reverse_complement":
-        res = map(transcribe, input_list)
-        return res[0] if len(res) == 1 else list(res)
+        res = list(map(reverse_complement, input_list))
+        return res[0] if len(res) == 1 else res
     if method == "complement":
-        res = map(complement, input_list)
-        return res[0] if len(res) == 1 else list(res)
+        res = list(map(complement, input_list))
+        return res[0] if len(res) == 1 else res
 
 
-
-def filter_fastq(seqs: dict, gc_bounds=(0,100), length_bounds=(0, 2**32), quality_threshold=0):
+def filter_fastq(seqs: dict, gc_bounds=(0, 100), length_bounds=(0, 2 ** 32), quality_threshold=0) -> dict:
     """
     Perform FASTQ filtering, based on GC-content, length and quality.
     :param seqs: dict
-    :param gc_bounds: tuple
-    :param length_bounds:
-    :param quality_threshold:
-    :return:
+    :param gc_bounds: tuple | int
+    :param length_bounds: tuple | int
+    :param quality_threshold: int
+    :return: dict | None
     """
     # проверяем тип аргумента в gc_bounds
     # если это не кортеж -- подставляем число в верхнюю границу
@@ -46,8 +50,8 @@ def filter_fastq(seqs: dict, gc_bounds=(0,100), length_bounds=(0, 2**32), qualit
     filtered_seqs = {}
     for name, (sequence, quality) in seqs.items():
         if (gc_bounds[0] <= count_gc(sequence) <= gc_bounds[1] and
-            length_bounds[0] <= len(sequence) <= length_bounds[1] and
-            get_seq_quality(quality) >= quality_threshold):
+                length_bounds[0] <= len(sequence) <= length_bounds[1] and
+                get_seq_quality(quality) >= quality_threshold):
             filtered_seqs[name] = (sequence, quality)
-    return filtered_seqs
 
+    return filtered_seqs
