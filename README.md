@@ -1,9 +1,13 @@
-BBBBB  IIIIII  OOOOO  SSSSS  W   W   AAAAA  GGGGG  GGGGG  EEEEE  RRRRR  
-B   B    II   O     O S      W   W  A     A G      G      E      R   R 
-BBBBB     II   O     O  SSSS  W W W  AAAAAAA G  GGG G  GGG EEEE   RRRRR  
-B   B    II   O     O      S  W W W  A     A G    G G    G E      R  R  
-BBBBB  IIIIII  OOOOO  SSSSS   W   W  A     A  GGGGG  GGGGG  EEEEE  R   R 
-
+```
+       (        )   (                                            (     
+   (   )\ )  ( /(   )\ )  (  (       (      (       (            )\ )  
+ ( )\ (()/(  )\()) (()/(  )\))(   '  )\     )\ )    )\ )    (   (()/(  
+ )((_) /(_))((_)\   /(_))((_)()\ )((((_)(  (()/(   (()/(    )\   /(_)) 
+((_)_ (_))    ((_) (_))  _(())\_)())\ _ )\  /(_))_  /(_))_ ((_) (_))   
+ | _ )|_ _|  / _ \ / __| \ \((_)/ /(_)_\(_)(_)) __|(_)) __|| __|| _ \  
+ | _ \ | |  | (_) |\__ \  \ \/\/ /  / _ \    | (_ |  | (_ || _| |   /  
+ |___/|___|  \___/ |___/   \_/\_/  /_/ \_\    \___|   \___||___||_|_\  
+```
 # bioswagger
 Classic bioinformatician toolkit for basic transformations with DNA and RNA sequences and perform FASTQ quality filtration.
 
