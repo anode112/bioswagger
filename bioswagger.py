@@ -10,6 +10,8 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-g', '--gc-content', action='store_true', help='Count GC percentage in FASTQ')
 parser.add_argument('-f', '--file', required=True, help='Path to FASTQ file')
+parser.add_argument('--gc-bounds', nargs=2, type=int, help=('MIN_GC', 'MAX_GC'))
+parser.add_argument('--q-trashold', type=int, help=('Min quality allowed'))
 
 def read_fastq(fastq_file) -> dict:
     """
@@ -78,7 +80,7 @@ def run_dna_rna_tools(*input_list) -> list:
         return res[0] if len(res) == 1 else res
 
 
-def filter_fastq(seqs: dict, output_fastq, gc_bounds=(0, 100), length_bounds=(0, 2 ** 32), quality_threshold=0) -> dict:
+def filter_fastq(seqs: dict, gc_bounds=(0, 100), length_bounds=(0, 2 ** 32), quality_threshold=0) -> dict:
     """
     Perform FASTQ filtering, based on GC-content, length and quality.
     :param seqs: dict
@@ -99,7 +101,8 @@ def filter_fastq(seqs: dict, output_fastq, gc_bounds=(0, 100), length_bounds=(0,
 
     # итерируемся по словарю с сиквенсами
     filtered_seqs = {}
-    for name, sequence, quality in seqs.items():
+    for name, (sequence, quality) in seqs.items():
+        print(get_seq_quality(quality))
         if (gc_bounds[0] <= count_gc(sequence) <= gc_bounds[1] and
                 length_bounds[0] <= len(sequence) <= length_bounds[1] and
                 get_seq_quality(quality) >= quality_threshold):
@@ -107,10 +110,26 @@ def filter_fastq(seqs: dict, output_fastq, gc_bounds=(0, 100), length_bounds=(0,
 
     return filtered_seqs
 
+
+
 if __name__ == '__main__':
     args = parser.parse_args()
     data = read_fastq(args.file)    
+    
     if args.gc_content:
         all_sequences = "".join(seq for seq, _ in data.values())
         gc_total = count_gc(all_sequences)
         print(f"Total GC content: {gc_total:.2f}%")
+
+    if args.gc_bounds:
+        gc_bounds = tuple(args.gc_bounds)  
+    else:
+        gc_bounds = (0, 100)  
+
+    if args.q_trashold:
+        quality_threshold = args.q_trashold
+    else:
+        quality_threshold = 20
+    print(quality_threshold)
+    filtered = filter_fastq(data, gc_bounds=gc_bounds, quality_threshold=quality_threshold)
+    # print(filtered)
