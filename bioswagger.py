@@ -1,18 +1,30 @@
 from content.dna_rna_tools import reverse, reverse_complement, transcribe, complement, is_valid_seq
 from content.fastq_functions import count_gc, get_seq_quality
 import os
+import argparse
+
+# parser settings
+parser = argparse.ArgumentParser(
+                    prog='Deadborn fastq disruptor',
+                    epilog='lmao bottom text')
+
+parser.add_argument('-g', '--gc-content', action='store_true', help='Count GC percentage in FASTQ')
+parser.add_argument('-f', '--file', required=True, help='Path to FASTQ file')
 
 def read_fastq(fastq_file) -> dict:
     """
     read file and transforms it into dict
     :return:
     """
+    if not os.path.isfile(fastq_file):
+        raise FileNotFoundError(f"No such file: {fastq_file}")
+        # log
     # no fastq file check
     with open(fastq_file) as fastq:
         parsed_fq = {}
         # deleting exceed symbols
         seqs = [line.strip() for line in fastq.readlines()]
-        if seqs % 4 != 0:
+        if len(seqs) % 4 != 0:
             raise ValueError("Broken FASTQ! Lines dont divided by 4!")
         # lets divide by 4 our lines via zip
         # make iterator based on our list
@@ -66,7 +78,7 @@ def run_dna_rna_tools(*input_list) -> list:
         return res[0] if len(res) == 1 else res
 
 
-def filter_fastq(input_fastq, output_fastq, gc_bounds=(0, 100), length_bounds=(0, 2 ** 32), quality_threshold=0) -> dict:
+def filter_fastq(seqs: dict, output_fastq, gc_bounds=(0, 100), length_bounds=(0, 2 ** 32), quality_threshold=0) -> dict:
     """
     Perform FASTQ filtering, based on GC-content, length and quality.
     :param seqs: dict
@@ -75,14 +87,6 @@ def filter_fastq(input_fastq, output_fastq, gc_bounds=(0, 100), length_bounds=(0
     :param quality_threshold: int
     :return: dict | None
     """
-
-    # open path, make list of files
-    for file in os.listdir(input_fastq):
-        # make dict
-        read_fastq(file)
-        # do smth
-        write_fastq()
-        pass
 
 
     # проверяем тип аргумента в gc_bounds
@@ -95,10 +99,18 @@ def filter_fastq(input_fastq, output_fastq, gc_bounds=(0, 100), length_bounds=(0
 
     # итерируемся по словарю с сиквенсами
     filtered_seqs = {}
-    for name, sequence, quality) in seqs.items():
+    for name, sequence, quality in seqs.items():
         if (gc_bounds[0] <= count_gc(sequence) <= gc_bounds[1] and
                 length_bounds[0] <= len(sequence) <= length_bounds[1] and
                 get_seq_quality(quality) >= quality_threshold):
             filtered_seqs[name] = (sequence, quality)
 
     return filtered_seqs
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    data = read_fastq(args.file)    
+    if args.gc_content:
+        all_sequences = "".join(seq for seq, _ in data.values())
+        gc_total = count_gc(all_sequences)
+        print(f"Total GC content: {gc_total:.2f}%")
